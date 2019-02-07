@@ -15,7 +15,7 @@ class Deck:
             t = self.cards[i]
             self.cards[i] = self.cards[rand]
             self.cards[rand] = t
-        
+
     def show_deck(self):
         for card in self.cards:
             print(card.rank)
@@ -77,6 +77,7 @@ class Hand:
 
     def calculate_initial_dealer_score(self):
         val = self.cards[1].rank
+        
         if val == 1:
             self.score = 11
         elif val >= 11:
