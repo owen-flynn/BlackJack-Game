@@ -1,3 +1,4 @@
+import blackjack
 import graphics
 from collections import namedtuple
 import pygame
@@ -7,6 +8,18 @@ def game_loop(display,colours,hit,stand):
     game_display = pygame.display.set_mode((display.width, display.height))
     game_display.fill(colours.background)
     crashed = False
+
+    card = namedtuple("card","rank suit")
+
+    deck = blackjack.Deck()
+    deck.build_deck(card)
+    deck.shuffle()
+
+    dealer = blackjack.Hand("dealer",0,0)
+    player = blackjack.Hand("player",80,500)
+    player.deal(deck)
+    dealer.deal(deck)
+    graphics.draw_hand(pygame,game_display,player)
 
     while not crashed:
         graphics.draw_button(pygame,game_display,hit)
