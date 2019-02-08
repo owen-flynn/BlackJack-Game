@@ -16,20 +16,26 @@ def game_loop(display,colours,hit,stand):
 
     card = namedtuple("card","rank suit")
 
+    shape_coordinates = namedtuple("shape_coordinates","x y width height")
+    back_of_card = shape_coordinates(x = 80, y = 200, width = 100, height = 144)
+
     deck = blackjack.Deck()
     deck.build_deck(card)
     deck.shuffle()
 
-    dealer = blackjack.Hand("dealer",0,0)
+    dealer = blackjack.Hand("dealer",80,200)
     player = blackjack.Hand("player",80,500)
     player.deal(deck)
     dealer.deal(deck)
-
+    
     while not crashed:
         player.calculate_score()
+        dealer.calculate_initial_dealer_score()
         game_display.fill(colours.background)
         graphics.draw_hand(pygame,game_display,player)
+        graphics.draw_half_hand(pygame,game_display,colours,dealer,back_of_card)
         graphics.display_score(pygame,game_display,colours,player)
+        graphics.display_score(pygame,game_display,colours,dealer)
         graphics.draw_button(pygame,game_display,hit)
         graphics.draw_button(pygame,game_display,stand)
         pygame.display.update()
@@ -40,6 +46,8 @@ def game_loop(display,colours,hit,stand):
             graphics.message_display(pygame,game_display,text,display,colours)
             player.reset()
             player.deal(deck)
+            dealer.reset()
+            dealer.deal(deck)
 
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()

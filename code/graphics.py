@@ -17,6 +17,16 @@ def draw_hand(pygame,game_display,hand):
         game_display.blit(card_image,(x,y))
         x = x + 100
 
+def draw_half_hand(pygame,game_display,colours,hand,back_of_card):
+    x_val = hand.x + 100
+    y_val =  hand.y
+    card = hand.cards[1]
+    rank = str(card.rank)
+    suit = card.suit
+    card_image = pygame.image.load("../images/" + rank + suit + ".png")
+    game_display.blit(card_image,(x_val,y_val))
+    pygame.draw.rect(game_display,colours.red, (back_of_card.x,back_of_card.y,back_of_card.width,back_of_card.height))
+
 def display_score(pygame,game_display,colours,hand):
       font = pygame.font.SysFont(None, 25)
       text = font.render(hand.name + ": " + str(hand.score), True, colours.black )
