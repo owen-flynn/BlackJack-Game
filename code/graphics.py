@@ -1,3 +1,5 @@
+import time
+
 def draw_button(pygame,game_display,but):
     pygame.draw.rect(game_display,but.colour, (but.x,but.y,but.width,but.height))
     font = pygame.font.SysFont(None, 25)
@@ -19,3 +21,12 @@ def display_score(pygame,game_display,colours,hand):
       font = pygame.font.SysFont(None, 25)
       text = font.render(hand.name + ": " + str(hand.score), True, colours.black )
       game_display.blit(text,(hand.x,hand.y + 150))
+
+def message_display(pygame,game_display,text,display,colours):
+    font = pygame.font.SysFont(None, 100)
+    text_surface = font.render(text, True, colours.black)
+    text_rect = text_surface.get_rect()
+    text_rect.center = ((display.width/2), (display.height/2))
+    game_display.blit(text_surface,text_rect)
+    pygame.display.update()
+    time.sleep(2)

@@ -3,6 +3,12 @@ import graphics
 from collections import namedtuple
 import pygame
 
+def is_over_buttton(but,pos):
+    if pos[0] > but.x and pos[0] < but.x + but.width:
+        if pos[1] > but.y and pos[1] < but.y + but.height:
+            return True
+    return False
+
 def game_loop(display,colours,hit,stand):
     pygame.init()
     game_display = pygame.display.set_mode((display.width, display.height))
@@ -28,8 +34,19 @@ def game_loop(display,colours,hit,stand):
         graphics.draw_button(pygame,game_display,stand)
         pygame.display.update()
 
+
+        if player.score > 21:
+            text = "Plyer Bust"
+            graphics.message_display(pygame,game_display,text,display,colours)
+            player.reset()
+            player.deal(deck)
+
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                    if is_over_buttton(hit,pos):
+                        player.hit(deck)
 
             if event.type == pygame.QUIT:
                 crashed = True
