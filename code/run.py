@@ -6,7 +6,6 @@ import pygame
 def game_loop(display,colours,hit,stand):
     pygame.init()
     game_display = pygame.display.set_mode((display.width, display.height))
-    game_display.fill(colours.background)
     crashed = False
 
     card = namedtuple("card","rank suit")
@@ -19,9 +18,12 @@ def game_loop(display,colours,hit,stand):
     player = blackjack.Hand("player",80,500)
     player.deal(deck)
     dealer.deal(deck)
-    graphics.draw_hand(pygame,game_display,player)
 
     while not crashed:
+        player.calculate_score()
+        game_display.fill(colours.background)
+        graphics.draw_hand(pygame,game_display,player)
+        graphics.display_score(pygame,game_display,colours,player)
         graphics.draw_button(pygame,game_display,hit)
         graphics.draw_button(pygame,game_display,stand)
         pygame.display.update()

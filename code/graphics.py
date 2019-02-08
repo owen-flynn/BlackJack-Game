@@ -14,3 +14,8 @@ def draw_hand(pygame,game_display,hand):
         card_image = pygame.image.load("../images/" + rank + suit + ".png")
         game_display.blit(card_image,(x,y))
         x = x + 100
+
+def display_score(pygame,game_display,colours,hand):
+      font = pygame.font.SysFont(None, 25)
+      text = font.render(hand.name + ": " + str(hand.score), True, colours.black )
+      game_display.blit(text,(hand.x,hand.y + 150))
