@@ -6,6 +6,12 @@ def draw_button(pygame,game_display,but):
     text = font.render(but.text, True, but.text_colour)
     game_display.blit(text,(but.x + (but.width/2 - text.get_width()/2),but.y + (but.height/2 - text.get_height()/2)))
 
+def draw_card(pygame,game_display,card,x,y):
+    rank = str(card.rank)
+    suit = card.suit
+    card_image = pygame.image.load("../images/" + rank + suit + ".png")
+    game_display.blit(card_image,(x,y))
+
 def draw_hand(pygame,game_display,hand):
     x = hand.x
     y = hand.y
@@ -16,6 +22,13 @@ def draw_hand(pygame,game_display,hand):
         card_image = pygame.image.load("../images/" + rank + suit + ".png")
         game_display.blit(card_image,(x,y))
         x = x + 100
+        
+def draw_game_elements(pygame,game_display,colours,hit,stand,player,dealer):
+    draw_hand(pygame,game_display,player)
+    display_score(pygame,game_display,colours,player)
+    display_score(pygame,game_display,colours,dealer)
+    draw_button(pygame,game_display,hit)
+    draw_button(pygame,game_display,stand)
 
 def draw_half_hand(pygame,game_display,colours,hand,back_of_card):
     x_val = hand.x + 100
