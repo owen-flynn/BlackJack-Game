@@ -4,23 +4,38 @@ from collections import namedtuple
 import pygame
 import time
 
+def reset(player,dealer,deck):
+    player.reset()
+    dealer.reset()
+    player.deal(deck)
+    dealer.deal(deck)
+
 def is_over_buttton(but,pos):
     if pos[0] > but.x and pos[0] < but.x + but.width:
         if pos[1] > but.y and pos[1] < but.y + but.height:
             return True
     return False
 
-def dealer_turn(pygame,game_display,colours,hit,stand,player,dealer,deck):
-    while(dealer.score <= 17):
+def update_display(turn,params,colours,hit,stand,back_of_card,player,dealer,deck):
+    params.game_display.fill(colours.background)
+
+    if turn == "players_turn":
+        player.calculate_score()
+        dealer.calculate_initial_dealer_score()
+        graphics.draw_half_hand(params,colours,dealer,back_of_card)
+    elif turn == "dealers_turn":
         dealer.calculate_score()
+        graphics.draw_hand(params,dealer)
+
+    graphics.draw_game_elements(params,colours,hit,stand,player,dealer)
+    params.pygame.display.update()
+
+def dealer_turn(params,colours,hit,stand,back_of_card,player,dealer,deck):
+    while(dealer.score < 17):
         dealer.hit(deck)
+        dealer.calculate_score()
 
-    game_display.fill(colours.background)
-    dealer.calculate_score()
-    graphics.draw_hand(pygame,game_display,dealer)
-    graphics.draw_game_elements(pygame,game_display,colours,hit,stand,player,dealer)
-    pygame.display.update()
-
+    update_display("dealers_turn",params,colours,hit,stand,back_of_card,player,dealer,deck)
 
 def game_loop(display,colours,hit,stand):
     pygame.init()
@@ -39,23 +54,19 @@ def game_loop(display,colours,hit,stand):
     dealer = blackjack.Hand("dealer",80,200)
     player = blackjack.Hand("player",80,500)
 
-    #card_1 = card(rank = 5, suit = "Hearts")
-    #card_2 = card(rank = 2, suit = "Clubs")
-    #dealer.cards.append(card_1)
-    #dealer.cards.append(card_2)
     crashed = False
     stand_pressed = False
 
+    parameters = namedtuple("parameters","pygame game_display")
+    params = parameters(pygame = pygame, game_display = game_display)
+
     while not crashed:
         if stand_pressed:
-            dealer_turn(pygame,game_display,colours,hit,stand,player,dealer,deck)
+            dealer_turn(params,colours,hit,stand,back_of_card,player,dealer,deck)
             stand_pressed = False
-            time.sleep(1)
+            time.sleep(3)
 
-        player.reset()
-        dealer.reset()
-        player.deal(deck)
-        dealer.deal(deck)
+        reset(player,dealer,deck)
 
         while not stand_pressed:
             if crashed == True:
@@ -73,20 +84,15 @@ def game_loop(display,colours,hit,stand):
                 if event.type == pygame.QUIT:
                     crashed = True
 
-            game_display.fill(colours.background)
-            player.calculate_score()
-            dealer.calculate_initial_dealer_score()
-            graphics.draw_half_hand(pygame,game_display,colours,dealer,back_of_card)
-            graphics.draw_game_elements(pygame,game_display,colours,hit,stand,player,dealer)
-            pygame.display.update()
 
+            update_display("players_turn",params,colours,hit,stand,back_of_card,player,dealer,deck)
 
     pygame.display.quit()
     pygame.quit()
 
 def main():
     display_tuple = namedtuple("display_tuple","width height")
-    display = display_tuple(width = 1980, height = 1080)
+    display = display_tuple(width = 1500, height = 1500)
 
     colours_tuple = namedtuple("colours_tuple","black green red yellow background")
     colours = colours_tuple(black = (0,0,0), green = (0,255,0), red = (255,0,0),
