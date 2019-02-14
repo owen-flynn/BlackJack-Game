@@ -1,10 +1,13 @@
 import time
 
 def draw_button(params,but):
-    params.pygame.draw.rect(params.game_display,but.colour, (but.x,but.y,but.width,but.height))
+    params.pygame.draw.rect(params.game_display,but.colour,
+        (but.x,but.y,but.width,but.height))
     font = params.pygame.font.SysFont(None, 25)
     text = font.render(but.text, True, but.text_colour)
-    params.game_display.blit(text,(but.x + (but.width/2 - text.get_width()/2),but.y + (but.height/2 - text.get_height()/2)))
+    params.game_display.blit(text,
+        (but.x + (but.width/2 - text.get_width()/2),
+        but.y + (but.height/2 - text.get_height()/2)))
 
 def draw_card(params,card,x,y):
     rank = str(card.rank)
@@ -38,7 +41,8 @@ def draw_half_hand(params,colours,hand,back_of_card):
     suit = card.suit
     card_image = params.pygame.image.load("../images/" + rank + suit + ".png")
     params.game_display.blit(card_image,(x_val,y_val))
-    params.pygame.draw.rect(params.game_display,colours.red, (back_of_card.x,back_of_card.y,back_of_card.width,back_of_card.height))
+    params.pygame.draw.rect(params.game_display,colours.red,
+        (back_of_card.x,back_of_card.y,back_of_card.width,back_of_card.height))
 
 def display_score(params,colours,hand):
       font = params.pygame.font.SysFont(None, 25)

@@ -35,7 +35,8 @@ def dealer_turn(params,colours,hit,stand,back_of_card,player,dealer,deck):
         dealer.hit(deck)
         dealer.calculate_score()
 
-    update_display("dealers_turn",params,colours,hit,stand,back_of_card,player,dealer,deck)
+    update_display("dealers_turn",params,colours,hit,stand,back_of_card,
+        player,dealer,deck)
 
 def game_loop(display,colours,hit,stand):
     pygame.init()
@@ -85,7 +86,8 @@ def game_loop(display,colours,hit,stand):
                     crashed = True
 
 
-            update_display("players_turn",params,colours,hit,stand,back_of_card,player,dealer,deck)
+            update_display("players_turn",params,colours,hit,stand,back_of_card,
+                player,dealer,deck)
 
     pygame.display.quit()
     pygame.quit()
