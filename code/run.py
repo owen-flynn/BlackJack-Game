@@ -31,6 +31,8 @@ def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
     PYGAME.pygame.display.update()
 
 def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck):
+    hands.dealer.calculate_score()
+
     while(hands.dealer.score < 17):
         hands.dealer.hit(deck)
         hands.dealer.calculate_score()
