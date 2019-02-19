@@ -22,7 +22,6 @@ def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
     if turn == "players_turn":
         graphics.draw_half_hand(PYGAME,COLOURS,hands)
     elif turn == "dealers_turn":
-        hands.dealer.calculate_score()
         graphics.draw_hand(PYGAME,hands.dealer)
 
     graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,hands)
@@ -61,8 +60,7 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
             result = compare(hands)
             graphics.message_display(PYGAME,COLOURS,DISPLAY,result)
             stand_pressed = False
-            time.sleep(3)
-
+    
         reset(hands,deck)
 
         while not stand_pressed:
@@ -98,18 +96,6 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     pygame.quit()
 
 def main():
-    width = 1500
-    height = 1500
-
-    pygame.init()
-    screen = pygame.display.set_mode((width, height))
-
-    width_height = namedtuple("width_height","width height")
-    DISPLAY = width_height(width = width, height = height)
-
-    pygame_tuple = namedtuple("pygame_tuple","pygame screen")
-    PYGAME = pygame_tuple(pygame = pygame, screen = screen)
-
     card = namedtuple("card","rank suit")
 
     deck = blackjack.Deck()
@@ -119,8 +105,20 @@ def main():
     dealer = blackjack.Hand("dealer",80,200)
     player = blackjack.Hand("player",80,500)
 
+    width = 1500
+    height = 1500
+
+    pygame.init()
+    screen = pygame.display.set_mode((width, height))
+
     hand_tuple = namedtuple("hand_tuple", "player dealer")
     hands = hand_tuple(player = player, dealer = dealer)
+
+    pygame_tuple = namedtuple("pygame_tuple","pygame screen")
+    PYGAME = pygame_tuple(pygame = pygame, screen = screen)
+
+    width_height = namedtuple("width_height","width height")
+    DISPLAY = width_height(width = width, height = height)
 
     colours = namedtuple("colours","black green red yellow background")
 
