@@ -37,6 +37,20 @@ def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck):
 
     update_display("dealers_turn",PYGAME,COLOURS,BUTTONS,hands)
 
+def compare(hands):
+    result = " hello"
+    if hands.dealer.score > 21:
+        result = "dealer bust"
+    else:
+        if hands.player.score == hands.dealer.score:
+            result = "tie"
+        elif hands.player.score > hands.dealer.score:
+            result = "player wins"
+        else:
+            result = "dealer wins"
+
+    return result
+
 def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     crashed = False
     stand_pressed = False
@@ -44,6 +58,8 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     while not crashed:
         if stand_pressed:
             dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck)
+            result = compare(hands)
+            graphics.message_display(PYGAME,COLOURS,DISPLAY,result)
             stand_pressed = False
             time.sleep(3)
 
