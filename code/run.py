@@ -4,7 +4,9 @@ from collections import namedtuple
 import pygame
 import time
 
-def reset(hands,deck):
+def reset(hands,deck,card):
+    if len(deck.cards) < 4:
+        reshuffle(deck,card)
     hands.player.reset()
     hands.dealer.reset()
     hands.player.deal(deck)
@@ -27,10 +29,12 @@ def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
     graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,hands)
     PYGAME.pygame.display.update()
 
-def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck):
+def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck,card):
     hands.dealer.calculate_score()
 
     while(hands.dealer.score < 17):
+        if len(deck.cards) == 0:
+            reshuffle(deck,card)
         hands.dealer.hit(deck)
         hands.dealer.calculate_score()
 
@@ -50,18 +54,22 @@ def compare(hands):
 
     return result
 
+def reshuffle(deck,card):
+    deck.build_deck(card)
+    deck.shuffle()
+
 def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     crashed = False
     stand_pressed = False
 
     while not crashed:
         if stand_pressed:
-            dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck)
+            dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck,card)
             result = compare(hands)
             graphics.message_display(PYGAME,COLOURS,DISPLAY,result)
             stand_pressed = False
-    
-        reset(hands,deck)
+
+        reset(hands,deck,card)
 
         while not stand_pressed:
             if crashed == True:
@@ -81,6 +89,9 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     if is_over_buttton(BUTTONS.hit,pos):
+                        if len(deck.cards) == 0:
+                            reshuffle(deck,card)
+
                         hands.player.hit(deck)
                     if is_over_buttton(BUTTONS.stand,pos):
                         stand_pressed = True
