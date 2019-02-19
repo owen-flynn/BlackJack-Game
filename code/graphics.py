@@ -55,11 +55,11 @@ def display_score(PYGAME,COLOURS,hand):
       text = font.render(hand.name + ": " + str(hand.score), True, COLOURS.black )
       PYGAME.screen.blit(text,(hand.x,hand.y + 150))
 
-def message_display(params,text,display,colours):
-    font = params.pygame.font.SysFont(None, 100)
-    text_surface = font.render(text, True, colours.black)
+def message_display(PYGAME,COLOURS,DISPLAY,text):
+    font = PYGAME.pygame.font.SysFont(None, 100)
+    text_surface = font.render(text, True, COLOURS.black)
     text_rect = text_surface.get_rect()
-    text_rect.center = ((display.width/2), (display.height/2))
-    params.screen.blit(text_surface,text_rect)
-    params.pygame.display.update()
+    text_rect.center = ((DISPLAY.width/2), (DISPLAY.height/2))
+    PYGAME.screen.blit(text_surface,text_rect)
+    PYGAME.pygame.display.update()
     time.sleep(2)

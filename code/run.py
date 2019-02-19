@@ -20,8 +20,6 @@ def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
     PYGAME.screen.fill(COLOURS.background)
 
     if turn == "players_turn":
-        hands.player.calculate_score()
-        hands.dealer.calculate_initial_dealer_score()
         graphics.draw_half_hand(PYGAME,COLOURS,hands)
     elif turn == "dealers_turn":
         hands.dealer.calculate_score()
@@ -39,7 +37,7 @@ def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck):
 
     update_display("dealers_turn",PYGAME,COLOURS,BUTTONS,hands)
 
-def game_loop(PYGAME,COLOURS,BUTTONS,card,deck,hands):
+def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     crashed = False
     stand_pressed = False
 
@@ -55,6 +53,15 @@ def game_loop(PYGAME,COLOURS,BUTTONS,card,deck,hands):
             if crashed == True:
                 break
 
+            if hands.player.score >= 21:
+                if hands.player.score > 21:
+                    text = "player bust"
+                elif hands.player.score == 21:
+                    text = "player has 21"
+
+                graphics.message_display(PYGAME,COLOURS,DISPLAY,text)
+                break
+
             for event in pygame.event.get():
                 pos = pygame.mouse.get_pos()
 
@@ -67,7 +74,8 @@ def game_loop(PYGAME,COLOURS,BUTTONS,card,deck,hands):
                 if event.type == pygame.QUIT:
                     crashed = True
 
-
+            hands.player.calculate_score()
+            hands.dealer.calculate_initial_dealer_score()
             update_display("players_turn",PYGAME,COLOURS,BUTTONS,hands)
 
     pygame.display.quit()
@@ -79,6 +87,9 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode((width, height))
+
+    width_height = namedtuple("width_height","width height")
+    DISPLAY = width_height(width = width, height = height)
 
     pygame_tuple = namedtuple("pygame_tuple","pygame screen")
     PYGAME = pygame_tuple(pygame = pygame, screen = screen)
@@ -122,7 +133,7 @@ def main():
     buttons = namedtuple("button", "hit stand")
     BUTTONS = buttons(hit = hit, stand = stand)
 
-    game_loop(PYGAME,COLOURS,BUTTONS,card,deck,hands)
+    game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands)
 
 if __name__ == "__main__":
     main()
