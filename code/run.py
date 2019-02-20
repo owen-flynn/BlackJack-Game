@@ -19,24 +19,29 @@ def is_over_buttton(but,pos):
     return False
 
 def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
+    show_full_dealer = False
+
     PYGAME.screen.fill(COLOURS.background)
 
     if turn == "players_turn":
         graphics.draw_half_hand(PYGAME,COLOURS,hands)
+
     elif turn == "dealers_turn":
         graphics.draw_hand(PYGAME,hands.dealer)
+        show_full_dealer = True
 
-    graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,hands)
+    graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,hands,show_full_dealer)
     PYGAME.pygame.display.update()
 
 def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck,card):
-    hands.dealer.calculate_score()
+    hands.dealer.adjust_for_ace()
 
     while(hands.dealer.score < 17):
         if len(deck.cards) == 0:
             reshuffle(deck,card)
         hands.dealer.hit(deck)
-        hands.dealer.calculate_score()
+        #hands.dealer.calculate_score()
+        hands.dealer.adjust_for_ace()
 
     update_display("dealers_turn",PYGAME,COLOURS,BUTTONS,hands)
 
@@ -99,7 +104,7 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
                 if event.type == pygame.QUIT:
                     crashed = True
 
-            hands.player.calculate_score()
+            hands.player.adjust_for_ace()
             hands.dealer.calculate_initial_dealer_score()
             update_display("players_turn",PYGAME,COLOURS,BUTTONS,hands)
 

@@ -24,10 +24,10 @@ def draw_hand(PYGAME,hand):
         PYGAME.screen.blit(card_image,(x,y))
         x = x + 100
 
-def draw_game_elements(PYGAME,COLOURS,BUTTONS,hands):
+def draw_game_elements(PYGAME,COLOURS,BUTTONS,hands,show_full_dealer):
     draw_hand(PYGAME,hands.player)
-    display_score(PYGAME,COLOURS,hands.player)
-    display_score(PYGAME,COLOURS,hands.dealer)
+    display_score(PYGAME,COLOURS,hands.player,show_full_dealer)
+    display_score(PYGAME,COLOURS,hands.dealer,show_full_dealer)
     draw_button(PYGAME,COLOURS,BUTTONS.hit)
     draw_button(PYGAME,COLOURS,BUTTONS.stand)
 
@@ -50,9 +50,14 @@ def draw_half_hand(PYGAME,COLOURS,hands):
     PYGAME.pygame.draw.rect(PYGAME.screen,COLOURS.red,
     (x,y,width,height))
 
-def display_score(PYGAME,COLOURS,hand):
+def display_score(PYGAME,COLOURS,hand,show_full_dealer):
       font = PYGAME.pygame.font.SysFont(None, 25)
-      text = font.render(hand.name + ": " + str(hand.score), True, COLOURS.black )
+      if hand.name == "dealer" and show_full_dealer == False:
+          score = hand.initial_score
+      else:
+        score = hand.score
+
+      text = font.render(hand.name + ": " + str(score), True, COLOURS.black )
       PYGAME.screen.blit(text,(hand.x,hand.y + 150))
 
 def message_display(PYGAME,COLOURS,DISPLAY,text):

@@ -28,6 +28,7 @@ class Hand:
         self.y = y
         self.cards = []
         self.score = 0
+        self.initial_score = 0
 
     def reset(self):
         self.cards = []
@@ -36,23 +37,11 @@ class Hand:
     def deal(self,deck):
         self.cards.append(deck.cards.pop())
         self.cards.append(deck.cards.pop())
+        self.score = self.adjust_for_face(self.cards[0].rank) + self.adjust_for_face(self.cards[1].rank)
 
     def hit(self,deck):
         self.cards.append(deck.cards.pop())
-
-    def get_sum(self,cards):
-        sum = 0
-        val = 0
-
-        for card in cards:
-            if(card.rank >= 11 and card.rank <= 13):
-                val = 10
-            else:
-                val = card.rank
-
-            sum = sum + val
-
-        return sum
+        self.score += self.adjust_for_face(self.cards[len(self.cards)-1].rank)
 
     def has_ace(self,cards):
         for card in cards:
@@ -61,8 +50,14 @@ class Hand:
 
         return False
 
-    def calculate_score(self):
-        total = self.get_sum(self.cards)
+    def adjust_for_face(self,val):
+        if val > 10:
+            return 10
+        else:
+            return val
+
+    def adjust_for_ace(self):
+        total = self.score
 
         if self.has_ace(self.cards):
             new_total = total + 10
@@ -77,13 +72,11 @@ class Hand:
 
     def calculate_initial_dealer_score(self):
         val = self.cards[1].rank
-        
+
         if val == 1:
-            self.score = 11
-        elif val >= 11:
-            self.score = 10
+            self.initial_score = 11
         else:
-            self.score = val
+            self.initial_score = self.adjust_for_face(val)
 
     def show_hand(self):
         for card in self.cards:
