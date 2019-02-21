@@ -18,7 +18,7 @@ def is_over_buttton(but,pos):
             return True
     return False
 
-def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
+def update_display(turn,PYGAME,COLOURS,BUTTONS,stats,hands):
     show_full_dealer = False
 
     PYGAME.screen.fill(COLOURS.background)
@@ -30,25 +30,24 @@ def update_display(turn,PYGAME,COLOURS,BUTTONS,hands):
         graphics.draw_hand(PYGAME,hands.dealer)
         show_full_dealer = True
 
-    graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,hands,show_full_dealer)
+    graphics.draw_game_elements(PYGAME,COLOURS,BUTTONS,stats,hands,show_full_dealer)
     PYGAME.pygame.display.update()
 
-def dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck,card):
+def dealer_turn(PYGAME,COLOURS,BUTTONS,stats,hands,deck,card):
     hands.dealer.adjust_for_ace()
 
     while(hands.dealer.score < 17):
         if len(deck.cards) == 0:
             reshuffle(deck,card)
         hands.dealer.hit(deck)
-        #hands.dealer.calculate_score()
         hands.dealer.adjust_for_ace()
 
-    update_display("dealers_turn",PYGAME,COLOURS,BUTTONS,hands)
+    update_display("dealers_turn",PYGAME,COLOURS,BUTTONS,stats,hands)
 
 def compare(hands):
     result = " hello"
     if hands.dealer.score > 21:
-        result = "dealer bust"
+        result = "player wins"
     else:
         if hands.player.score == hands.dealer.score:
             result = "tie"
@@ -67,10 +66,16 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
     crashed = False
     stand_pressed = False
 
+    stats = {}
+    stats["player wins"] = 0
+    stats["dealer wins"] = 0
+    stats["tie"] = 0
+
     while not crashed:
         if stand_pressed:
-            dealer_turn(PYGAME,COLOURS,BUTTONS,hands,deck,card)
+            dealer_turn(PYGAME,COLOURS,BUTTONS,stats,hands,deck,card)
             result = compare(hands)
+            stats[result] += 1
             graphics.message_display(PYGAME,COLOURS,DISPLAY,result)
             stand_pressed = False
 
@@ -83,8 +88,13 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
             if hands.player.score >= 21:
                 if hands.player.score > 21:
                     text = "player bust"
+                    result = "dealer wins"
+
                 elif hands.player.score == 21:
                     text = "player has 21"
+                    result = "player wins"
+
+                stats[result] += 1
 
                 graphics.message_display(PYGAME,COLOURS,DISPLAY,text)
                 break
@@ -106,7 +116,7 @@ def game_loop(PYGAME,COLOURS,BUTTONS,DISPLAY,card,deck,hands):
 
             hands.player.adjust_for_ace()
             hands.dealer.calculate_initial_dealer_score()
-            update_display("players_turn",PYGAME,COLOURS,BUTTONS,hands)
+            update_display("players_turn",PYGAME,COLOURS,BUTTONS,stats,hands)
 
     pygame.display.quit()
     pygame.quit()

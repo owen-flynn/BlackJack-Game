@@ -24,12 +24,13 @@ def draw_hand(PYGAME,hand):
         PYGAME.screen.blit(card_image,(x,y))
         x = x + 100
 
-def draw_game_elements(PYGAME,COLOURS,BUTTONS,hands,show_full_dealer):
+def draw_game_elements(PYGAME,COLOURS,BUTTONS,stats,hands,show_full_dealer):
     draw_hand(PYGAME,hands.player)
     display_score(PYGAME,COLOURS,hands.player,show_full_dealer)
     display_score(PYGAME,COLOURS,hands.dealer,show_full_dealer)
     draw_button(PYGAME,COLOURS,BUTTONS.hit)
     draw_button(PYGAME,COLOURS,BUTTONS.stand)
+    display_totals(PYGAME,COLOURS,stats)
 
 def draw_half_hand(PYGAME,COLOURS,hands):
     x = 80
@@ -59,6 +60,15 @@ def display_score(PYGAME,COLOURS,hand,show_full_dealer):
 
       text = font.render(hand.name + ": " + str(score), True, COLOURS.black )
       PYGAME.screen.blit(text,(hand.x,hand.y + 150))
+
+def display_totals(PYGAME,COLOURS,stats):
+    font = PYGAME.pygame.font.SysFont(None, 25)
+    text = font.render("player wins" + ": " + str(stats["player wins"]), True, COLOURS.black )
+    PYGAME.screen.blit(text,(10, 0))
+    text = font.render("dealer wins" + ": " + str(stats["dealer wins"]), True, COLOURS.black )
+    PYGAME.screen.blit(text,(10, 30))
+    text = font.render("tie" + ": " + str(stats["tie"]), True, COLOURS.black )
+    PYGAME.screen.blit(text,(10, 60))
 
 def message_display(PYGAME,COLOURS,DISPLAY,text):
     font = PYGAME.pygame.font.SysFont(None, 100)
