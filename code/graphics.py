@@ -63,12 +63,11 @@ def display_score(PYGAME,COLOURS,hand,show_full_dealer):
 
 def display_totals(PYGAME,COLOURS,stats):
     font = PYGAME.pygame.font.SysFont(None, 25)
-    text = font.render("player wins" + ": " + str(stats["player wins"]), True, COLOURS.black )
-    PYGAME.screen.blit(text,(10, 0))
-    text = font.render("dealer wins" + ": " + str(stats["dealer wins"]), True, COLOURS.black )
-    PYGAME.screen.blit(text,(10, 30))
-    text = font.render("tie" + ": " + str(stats["tie"]), True, COLOURS.black )
-    PYGAME.screen.blit(text,(10, 60))
+    y = 0
+    for stat, count in stats.items():
+        text = font.render(stat + ": " + str(count), True, COLOURS.black )
+        PYGAME.screen.blit(text,(10, y))
+        y += 30
 
 def message_display(PYGAME,COLOURS,DISPLAY,text):
     font = PYGAME.pygame.font.SysFont(None, 100)
